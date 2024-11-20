@@ -344,11 +344,18 @@ export class CurrentPlayer extends Player {
         const time = Date.now();
         if (time - this.cooldownDegats > 1500) {
             this.cooldownDegats = time;
-            this.ws.sendMessage({
-                type: "degats",
-                sender: this.username,
-                nb: 1
-            });
+
+            if (this.life > 1) {
+                this.life -= 1;
+                this.ws.sendMessage({
+                    type: "degats",
+                    sender: this.username,
+                    nb: 1,
+                });
+            } else {
+                this.life = 0;
+                this.playerDeath();
+            }
         }
     }
 

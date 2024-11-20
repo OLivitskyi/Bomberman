@@ -1,9 +1,9 @@
 package livechat
 
 import (
-	"net/http"
-
+	"bomberman/src/store/models"
 	"github.com/gorilla/websocket"
+	"net/http"
 )
 
 type Client struct {
@@ -11,6 +11,8 @@ type Client struct {
 	conn     *websocket.Conn
 	send     chan []byte
 	Username string
+	Position models.Position // Використання загальної моделі
+	Lives    int
 }
 
 var upgrader = websocket.Upgrader{

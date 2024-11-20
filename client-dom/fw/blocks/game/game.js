@@ -153,33 +153,36 @@ export default class Game extends Component {
         let changesMade = false;
 
         list.forEach((playerLi, index) => {
-            if (this.lives[index] > 0 && !this.leavers.includes(playerLi.props.className)) {
-                const newContent = `${playerLi.props.className} : ${this.lives[index]}`;
+            const life = this.lives[index];
+            const playerClass = playerLi.props.className;
+
+            if (life > 0 && !this.leavers.includes(playerClass)) {
+                const newContent = `${playerClass} : ${life}`;
                 if (playerLi.children[0] !== newContent) {
                     playerLi.children = [newContent];
                     changesMade = true;
                 }
-                this.winner = playerLi.props.className;
+                this.winner = playerClass;
             } else {
-                if (playerLi.props.className === this.currentPlayer.username && this.currentPlayer.isAlive) {
+                if (playerClass === this.currentPlayer.username && this.currentPlayer.isAlive) {
                     this.currentPlayer.isAlive = false;
-                    this.currentPlayer.playerDeath()
+                    this.currentPlayer.playerDeath();
                 }
 
-                const newContent = this.leavers.includes(playerLi.props.className) ? `${playerLi.props.className} : left` : `${playerLi.props.className} : dead`;
+                const newContent = this.leavers.includes(playerClass) ? `${playerClass} : left` : `${playerClass} : dead`;
                 if (playerLi.children[0] !== newContent) {
                     playerLi.children = [newContent];
                     playerLi.props.style = "color:#ff5abb; text-decoration:line-through;";
                     changesMade = true;
                 }
             }
-        })
+        });
 
-        // Only update the DOM if changes were made
         if (changesMade) {
             this.livesContainer.update();
         }
     }
+
     gameLoop(timestamp) {
         requestAnimationFrame((timestamp) => this.gameLoop(timestamp));
         this.fpsCounter();

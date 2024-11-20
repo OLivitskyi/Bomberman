@@ -220,11 +220,19 @@ body {
 
     #lives-container {
         display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        top: 40px;
-        left: -200px;
-        width: 30%;
+        flex-direction: row; /* Горизонтальне розташування елементів */
+        justify-content: center; /* Центрування контейнера */
+        align-items: center; /* Центрування по вертикалі */
+        position: absolute;
+        bottom: -50px; /* Відступ нижче межі карти */
+        left: 50%; /* Центрування по горизонталі */
+        transform: translateX(-50%); /* Вирівнювання по центру */
+        width: auto; /* Динамічна ширина */
+        background-color: rgba(0, 0, 0, 0.7); /* Темний напівпрозорий фон */
+        padding: 5px 10px; /* Внутрішні відступи */
+        border-radius: 10px; /* Округлені кути */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Тінь */
+        z-index: 200; /* Вищий пріоритет для відображення */
 
         p {
             text-align: center;
@@ -235,24 +243,22 @@ body {
         }
 
         ul {
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            flex-direction: column;
-            flex-wrap: wrap;
-            width: 100%;
+            display: flex; /* Рядок для елементів списку */
+            flex-direction: row; /* Горизонтальне розташування */
+            list-style: none; /* Без стандартних маркерів */
+            padding: 0;
+            margin: 0;
 
             li {
-                padding: 10px;
-                border-radius: 6px;
-                width: 100px;
-                margin-bottom: 5px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-weight: bold;
-                background-color: rgba($primary-color, 0.8);
-                color: $text-color;
+                margin: 0 5px; /* Відстань між життями */
+                padding: 5px 10px;
+                border-radius: 5px; /* Округлені кути */
+                background-color: rgba($primary-color, 0.8); /* Світлий фон */
+                color: $text-color; /* Контрастний текст */
+                font-size: 0.9rem; /* Зменшений шрифт */
+                text-align: center;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Легка тінь */
+                white-space: nowrap; /* Заборона переносу тексту */
             }
         }
     }

@@ -121,8 +121,13 @@ export default class Game extends Component {
         this.map.tabBomb = this.tabBomb;
         this.map.addElement(this.tabBomb);
         this.addElement(this.map);
+
+        // Додаємо livesContainer до карти
+        this.map.addElement(this.livesContainer);
+
         this.update();
     }
+
 
     /**
      * Updates the player's movement based on the received message.
@@ -137,19 +142,43 @@ export default class Game extends Component {
     }
 
     initLives() {
-        
+        if (this.livesContainer.children.length > 0) {
+            return; // Запобігаємо повторній ініціалізації
+        }
+
         const livesList = new Component("ul", { id: "lives-list" });
+
         this.readyPlayers.forEach((player, index) => {
-            const playerLife = new Component("li", { className: player.props.id, style: `${this.username === player.props.id ? "background-color:rgba(63, 240, 0, .7);" : ""}` }, [`${player.props.id} : ${this.lives[index]}`]);
+            const hearts = "❤️".repeat(this.lives[index]);
+            const playerLife = new Component(
+                "li",
+                {
+                    className: player.props.id,
+                    style: `${this.username === player.props.id ? "background-color:rgba(63, 240, 0, .7);" : ""}`,
+                },
+                [`${player.props.id} : ${hearts}`]
+            );
             livesList.addElement(playerLife);
-        })
-        this.livesContainer.addElement(text, livesList);
-        this.addElement(this.livesContainer);
+        });
+
+        this.livesContainer.addElement(livesList);
         this.update();
     }
 
+
     updateLives() {
-        const list = this.livesContainer.children[1].children;
+        const list = this.livesContainer.children[0].children;
+        list.forEach((playerLi, index) => {
+            const life = this.lives[index];
+            const hearts = life > 0 ? "❤️".repeat(life) : "dead";
+            playerLi.children = [`${this.readyPlayers[index].props.id} : ${hearts}`];
+        });
+        this.livesContainer.update();
+    }
+
+
+    updateLives() {
+        const list = this.livesContainer.children[0].children; // Оновлено доступ до дочірніх елементів
         let changesMade = false;
 
         list.forEach((playerLi, index) => {
@@ -169,7 +198,10 @@ export default class Game extends Component {
                     this.currentPlayer.playerDeath();
                 }
 
-                const newContent = this.leavers.includes(playerClass) ? `${playerClass} : left` : `${playerClass} : dead`;
+                const newContent = this.leavers.includes(playerClass)
+                    ? `${playerClass} : left`
+                    : `${playerClass} : dead`;
+
                 if (playerLi.children[0] !== newContent) {
                     playerLi.children = [newContent];
                     playerLi.props.style = "color:#ff5abb; text-decoration:line-through;";

@@ -4,6 +4,23 @@
   box-sizing: border-box;
 }
 
+@media screen and (max-width: 768px) {
+  #game #lives-container {
+    bottom: 10px; /* Менший відступ знизу */
+    left: 50%; /* Центрування */
+    transform: translateX(-50%); /* Центрування по горизонталі */
+    width: 90%; /* Блок буде займати максимум 90% ширини */
+    padding: 5px; /* Трохи зменшений відступ */
+  }
+
+  #game #lives-container ul li {
+    font-size: 0.7rem; /* Зменшений шрифт для маленьких екранів */
+    padding: 2px 6px; /* Менший відступ */
+    margin: 0 3px; /* Менший проміжок між елементами */
+  }
+}
+
+
 body {
   font-family: "Old English Text MT", serif;
   display: flex;
@@ -15,6 +32,7 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
+  overflow-x: hidden;
 }
 
 #root {
@@ -182,11 +200,10 @@ body {
 }
 
 #game {
-  display: flex;
   position: relative;
-  flex-direction: column-reverse;
+  display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* Елементи розташовані зверху */
   width: 650px;
   height: 650px;
   min-width: 300px;
@@ -195,41 +212,44 @@ body {
   background-color: #1c1c1c;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
   border-radius: 20px;
+  overflow: hidden; /* Запобігає виходу елементів за межі карти */
 }
+
 #game #lives-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  top: 40px;
-  left: -200px;
-  width: 30%;
+  display: flex; /* Вирівнювання елементів в ряд */
+  flex-direction: row; /* Розташування елементів горизонтально */
+  justify-content: center; /* Центрування контейнера */
+  align-items: center; /* Центрування по вертикалі */
+  position: absolute;
+  bottom: -50px; /* Відступ нижче карти */
+  left: 50%; /* Центрування по горизонталі */
+  transform: translateX(-50%); /* Центрування */
+  width: auto; /* Динамічна ширина, залежить від кількості елементів */
+  background-color: rgba(0, 0, 0, 0.7); /* Темний напівпрозорий фон */
+  padding: 5px 10px; /* Внутрішні відступи */
+  border-radius: 10px; /* Округлені кути */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Тінь для об’єму */
+  z-index: 200; /* Пріоритет над іншими елементами */
 }
-#game #lives-container p {
-  text-align: center;
-  padding: 10px;
-  color: #f5f5dc;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
+
 #game #lives-container ul {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  flex-direction: column;
-  flex-wrap: wrap;
-  width: 100%;
+  display: flex; /* Елементи списку в рядок */
+  flex-direction: row; /* Зліва направо */
+  list-style: none; /* Вимкнути стандартні маркери списку */
+  padding: 0;
+  margin: 0;
 }
+
 #game #lives-container ul li {
-  padding: 10px;
-  border-radius: 6px;
-  width: 100px;
-  margin-bottom: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  background-color: rgba(255, 215, 0, 0.8);
-  color: #f5f5dc;
+  margin: 0 5px; /* Проміжок між життями */
+  padding: 5px 10px; /* Внутрішні відступи */
+  border-radius: 5px; /* Округлені кути */
+  background-color: rgba(255, 255, 255, 0.8); /* Світлий фон */
+  color: #000; /* Темний текст */
+  font-size: 0.9rem; /* Зменшений розмір шрифту */
+  text-align: center; /* Центрування тексту */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Легка тінь */
+  white-space: nowrap; /* Заборона переносу тексту */
 }
 
 #waitingRoom {

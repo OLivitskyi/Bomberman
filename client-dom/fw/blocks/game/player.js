@@ -358,7 +358,6 @@ export class CurrentPlayer extends Player {
             }
         }
     }
-
     /**
      * Notifies the server of the player's death.
      * @param {string} cause - The cause of the player's death.

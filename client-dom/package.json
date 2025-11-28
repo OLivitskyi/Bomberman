@@ -12,8 +12,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "vite": "^4.5.5"
+  "devDependencies": {
+    "vite": "^6.2.0"
   },
-  "devDependencies": {}
+  "overrides": {
+    "esbuild": "^0.25.0"
+  }
 }

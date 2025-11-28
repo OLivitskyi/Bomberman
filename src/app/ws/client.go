@@ -2,8 +2,11 @@ package livechat
 
 import (
 	"bomberman/src/store/models"
-	"github.com/gorilla/websocket"
 	"net/http"
+	"regexp"
+	"strings"
+
+	"github.com/gorilla/websocket"
 )
 
 type Client struct {
@@ -15,12 +18,32 @@ type Client struct {
 	Lives    int
 }
 
+// allowedOrigins contains the list of allowed origins for WebSocket connections
+var allowedOrigins = map[string]bool{
+	"http://localhost:3000":  true,
+	"https://localhost:3000": true,
+	"http://127.0.0.1:3000":  true,
+	"https://127.0.0.1:3000": true,
+}
+
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
-		return true
+		origin := r.Header.Get("Origin")
+		if origin == "" {
+			return true // Allow requests without Origin header (same-origin)
+		}
+		return allowedOrigins[origin]
 	},
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+}
+
+// validateUsername checks if the username is valid (alphanumeric, 1-10 chars)
+var usernameRegex = regexp.MustCompile(`^[a-zA-Z0-9_]{1,10}$`)
+
+func validateUsername(username string) bool {
+	username = strings.TrimSpace(username)
+	return usernameRegex.MatchString(username)
 }
 
 func (c *Client) Read() {
@@ -59,13 +82,19 @@ func (c *Client) Write() {
 }
 
 func WebsocketHandler(hub *Hub, w http.ResponseWriter, r *http.Request) {
-	conn, err := upgrader.Upgrade(w, r, nil)
+	username := strings.TrimSpace(r.URL.Query().Get("username"))
 
-	if err != nil {
+	// Validate username before upgrading connection
+	if !validateUsername(username) {
+		http.Error(w, "Invalid username: must be 1-10 alphanumeric characters", http.StatusBadRequest)
 		return
 	}
 
-	username := r.URL.Query().Get("username")
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		http.Error(w, "Could not upgrade connection", http.StatusBadRequest)
+		return
+	}
 
 	client := &Client{
 		hub:      hub,
